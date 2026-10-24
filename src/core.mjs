@@ -25,6 +25,15 @@ export function splitText(text,{limit=280,unit='bytes',boundary='tight'}={}){
   const start=cursor;let end=cursor,total=0;
   while(end<atoms.length&&total+atoms[end].cost<=limit){total+=atoms[end].cost;end++;}
   if(end===start)throw new Error('A grapheme at UTF-16 offset '+atoms[start].start+' needs '+atoms[start].cost+' '+UNITS[unit]+'. Increase the budget; it will not be broken.');
+  if(boundary==='readable'&&end<atoms.length){
+   let used=0,line=-1,space=-1;
+   for(let i=start;i<end;i++){used+=atoms[i].cost;if(used<total*.6)continue;
+    if(/[\r\n]/u.test(atoms[i].text))line=i+1;
+    else if(/^\s+$/u.test(atoms[i].text))space=i+1;
+   }
+   const cut=line>start?line:space;
+   if(cut>start){end=cut;total=atoms.slice(start,end).reduce((sum,a)=>sum+a.cost,0);}
+  }
   const chunk=text.slice(atoms[start].start,end<atoms.length?atoms[end].start:text.length);
   const bytes=encoder.encode(chunk).length;
   parts.push({text:chunk,start:atoms[start].start,end:atoms[start].start+chunk.length,byteStart:byteOffset,byteEnd:byteOffset+bytes,used:total});
