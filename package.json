@@ -1,0 +1,14 @@
+{
+  "name": "chunkwell",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/core.test.mjs test/transfer.test.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
