@@ -1,5 +1,7 @@
 # Chunkwell
 
+[Open Chunkwell](https://chunkwell.vercel.app)
+
 **A good place to make a break.**
 
 Split plain text into parts with an explicit UTF-8 byte, UTF-16 unit, code point, or grapheme budget. Inspect every boundary and keep a receipt that can reconstruct the supplied text exactly.
@@ -76,6 +78,10 @@ JSON includes **all text**, including whitespace. The CSV contains only numeric 
 - Modern `Intl.Segmenter`, `TextEncoder`, Blob, and module support are required. Clipboard access may require HTTPS and browser permission; select the text or save a file if unavailable.
 - Text stays in page memory until edited or the tab closes. Browser extensions, the operating system, clipboard, downloads, and hosting environment remain outside the app's control.
 - Native download destinations and clipboard permissions were not verified in automated browser QA. Receipt content and browser reconstruction were verified.
+
+## Screenshot
+
+The app was verified through browser DOM state, but the browser screenshot service timed out on both local and production pages. A real screenshot is pending; no mockup is presented as the running app.
 
 ## Verification
 
