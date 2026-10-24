@@ -8,3 +8,18 @@ test('validates budgets, text, units and safety bounds',()=>{for(const limit of 
 test('readable boundaries retain exact whitespace and choose a late newline',()=>{const source='one two\nthree four five';const r=splitText(source,{limit:12,boundary:'readable'});assert.equal(r.parts[0].text,'one two\n');assert.equal(r.parts.map(p=>p.text).join(''),source);});
 test('readable mode does not create tiny leading whitespace parts',()=>{assert.equal(splitText('a '+ 'b'.repeat(20),{limit:10,boundary:'readable'}).parts[0].used,10);});
 test('CRLF remains an intact grapheme with exact byte offsets',()=>{const source='ab\r\n界🙂';const r=splitText(source,{limit:4});assert.deepEqual(r.parts.map(p=>p.text),['ab\r\n','界','🙂']);assert.deepEqual(r.parts.map(p=>[p.byteStart,p.byteEnd]),[[0,4],[4,7],[7,11]]);});
+
+test('seeded Unicode invariants across all units and both boundary modes',()=>{
+ let seed=1741;const pick=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};const atoms=['a','界','🙂','e\u0301','👩‍💻',' ','\n','\r\n','🇨🇦','<b>'];
+ for(let sample=0;sample<32;sample++){const text=Array.from({length:40},()=>atoms[pick()%atoms.length]).join('');
+  for(const unit of ['bytes','utf16','points','graphemes'])for(const boundary of ['tight','readable']){
+   const limit=32+pick()%40;const r=splitText(text,{limit,unit,boundary});
+   assert.equal(r.parts.map(p=>p.text).join(''),text);let offset=0,bytes=0;
+   const edges=new Set([0,...Array.from(new Intl.Segmenter('en',{granularity:'grapheme'}).segment(text),x=>x.index),text.length]);
+   for(const p of r.parts){assert.ok(p.text.length>0);assert.ok(measure(p.text,unit)<=limit);assert.equal(p.used,measure(p.text,unit));assert.equal(p.start,offset);assert.equal(p.byteStart,bytes);assert.ok(edges.has(p.end));offset=p.end;bytes=p.byteEnd;}
+   assert.equal(offset,text.length);assert.equal(bytes,new TextEncoder().encode(text).length);
+  }
+ }
+});
+test('prototype property names cannot select counting units',()=>{assert.throws(()=>splitText('a',{unit:'constructor'}));assert.throws(()=>measure('a','toString'));});
+test('bounded larger input respects cap without truncation',()=>{const source='界🙂word '.repeat(2000);const r=splitText(source,{limit:512,boundary:'readable'});assert.equal(r.parts.map(p=>p.text).join(''),source);assert.ok(r.parts.every(p=>p.used<=512));});

@@ -1,0 +1,7 @@
+A small handoff, in three parts.
+
+The source includes café, 漢字, and a family 👩‍👩‍👧‍👦. They do not all cost the same number of bytes. A visible character can be several code points working together.
+
+Keep every space. Keep the line breaks.  Even these two spaces have a place. Try a byte budget, then switch to graphemes and see where the boundaries move.
+
+One final detail: joining the parts adds no separator. It should recover this exact text.

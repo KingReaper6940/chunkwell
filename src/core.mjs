@@ -8,7 +8,7 @@ export function validateText(text){
  return text;
 }
 export function measure(text,unit='bytes'){
- if(!(unit in UNITS))throw new Error('Choose a supported counting unit.');
+ if(!(Object.hasOwn(UNITS,unit)))throw new Error('Choose a supported counting unit.');
  if(unit==='bytes')return encoder.encode(text).length;
  if(unit==='utf16')return text.length;
  if(unit==='points')return Array.from(text).length;
@@ -17,7 +17,7 @@ export function measure(text,unit='bytes'){
 export function splitText(text,{limit=280,unit='bytes',boundary='tight'}={}){
  validateText(text);
  if(!Number.isSafeInteger(limit)||limit<1||limit>100000)throw new Error('Budget must be a whole number from 1 to 100,000.');
- if(!(unit in UNITS))throw new Error('Choose a supported counting unit.');
+ if(!(Object.hasOwn(UNITS,unit)))throw new Error('Choose a supported counting unit.');
  if(!['tight','readable'].includes(boundary))throw new Error('Choose a supported boundary preference.');
  const atoms=Array.from(segmenter.segment(text),({segment,index})=>({text:segment,start:index,cost:unit==='graphemes'?1:measure(segment,unit)}));
  const parts=[];let cursor=0,byteOffset=0;

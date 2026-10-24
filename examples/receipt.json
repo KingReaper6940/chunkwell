@@ -1,0 +1,34 @@
+{
+  "format": "chunkwell-v1",
+  "unit": "bytes",
+  "limit": 160,
+  "boundary": "readable",
+  "sourceUnits": 450,
+  "sourceBytes": 469,
+  "parts": [
+    {
+      "text": "A small handoff, in three parts.\n\nThe source includes café, 漢字, and a family 👩‍👩‍👧‍👦. They do not all cost the same number of bytes. A ",
+      "start": 0,
+      "end": 139,
+      "byteStart": 0,
+      "byteEnd": 158,
+      "used": 158
+    },
+    {
+      "text": "visible character can be several code points working together.\n\nKeep every space. Keep the line breaks.  Even these two spaces have a place. Try a byte budget, ",
+      "start": 139,
+      "end": 299,
+      "byteStart": 158,
+      "byteEnd": 318,
+      "used": 160
+    },
+    {
+      "text": "then switch to graphemes and see where the boundaries move.\n\nOne final detail: joining the parts adds no separator. It should recover this exact text.\n",
+      "start": 299,
+      "end": 450,
+      "byteStart": 318,
+      "byteEnd": 469,
+      "used": 151
+    }
+  ]
+}
